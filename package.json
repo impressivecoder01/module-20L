@@ -1,0 +1,18 @@
+{
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "prisma": "^7.8.0",
+    "tsx": "^4.23.0",
+    "typescript": "^7.0.2",
+    "name": "prisma-press-backend",
+    "version": "0.0.1",
+    "license": "ISC",
+    "type": "module",
+    "main": "server.ts"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "dotenv": "^17.4.2"
+  }
+}
