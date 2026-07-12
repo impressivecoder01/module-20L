@@ -4,6 +4,12 @@
   "license": "ISC",
   "type": "module",
   "main": "server.ts",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "test": "echo \"Error: on test specified\" && exit 1"
+  },
   "devDependencies": {
     "@types/node": "^26.1.1",
     "prisma": "^7.8.0",
