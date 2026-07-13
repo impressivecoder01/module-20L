@@ -24,6 +24,7 @@ app.get("/",(req: Request,res: Response)=>{
 
 app.post("/api/users/register", async(req: Request, res: Response)=> {
     const {name,  email, password, profilePhoto} = req.body
+    // console.log(req.body);
     const isUserExist = await prisma.user.findUnique({
         where: {email}
     })
@@ -52,6 +53,12 @@ app.post("/api/users/register", async(req: Request, res: Response)=> {
         where: {
             id: createdUser.id,
             email: createdUser.email || email
+        },
+        omit:{
+            password
+        },
+        include: {
+            profile: true
         }
     })
     // console.log(payload);
