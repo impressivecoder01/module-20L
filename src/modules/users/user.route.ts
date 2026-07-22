@@ -7,8 +7,7 @@ import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import { JwtPayload } from "jsonwebtoken";
 import { prisma } from "../../lib/prisma";
-
-
+import { auth } from "../../auth/auth";
 
 const router = Router();
 
@@ -26,55 +25,6 @@ declare global {
 }
 
 router.post("/register",userController.registerUser)
-
-const auth = (...requiredRoles: Role[]) => {
-    return catchAsync(async(req: Request, res: Response, next: NextFunction)=> {
-        const token = req.cookies.accessToken || (req.headers.authorization?.startsWith("Bearer")? req.headers.authorization?.split(" ")[1]: req.headers.authorization)
-        if(!token){
-            throw new Error("you are not logged in. Please log in to access this resource.")
-        }
-        const verifiedToken = jwtUtils.verifyToken(token, config.jwt_access_secret);
-
-    
-    // if(typeof verifiedToken === 'string'){
-    //     throw new Error(verifiedToken)
-    // }
-    if(!verifiedToken.success){
-        throw new Error(verifiedToken.error)
-    }
-        const {email, name, id, role} = verifiedToken.data as JwtPayload
-        if(requiredRoles.length && !requiredRoles.includes(role)){
-            throw new Error("Forbidden. You do not have permission to  access this resource")
-        }
-
-        const user = await prisma.user.findUnique({
-            where: {
-                id, 
-                email,
-                name,
-                role
-            }
-        })
-
-        if(!user){
-            throw new Error("User not found. Please log in again")
-        }
-
-        if(user.activeStatus==="BLOCKED"){
-            throw new Error ("Your account has been blocked. Please contact  support")
-        }
-
-        req.user={
-            email,
-            name,
-            id,
-            role
-        }
-        next()
-
-    })
-}
-
 
 router.get("/me",
 //     (req: Request, res: Response,next: NextFunction)=> {
@@ -107,5 +57,7 @@ router.get("/me",
 // }, 
 auth(Role.ADMIN, Role.AUTHOR, Role.USER) ,
 userController.getMyProfile)
+
+router.put("/my-profile", auth(Role.ADMIN, Role.AUTHOR, Role.USER), userController.updateMyProfile)
 
 export const userRouter = router;
