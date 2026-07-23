@@ -87,7 +87,7 @@ const updateMyProfileDB = async(userId: string, payload: any) => {
             profile: true
         }
     })
-    return updatedUser;
+    return updatedUser;  
 }
 
 export const userService = {
