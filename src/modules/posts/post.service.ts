@@ -1,5 +1,8 @@
+import { ICreatePostPayload } from "./post.interface"
 
-const createPost =()=>{}
+const createPost =(payload: ICreatePostPayload)=>{
+
+}
 const getAllPosts =()=>{}
 const getPostStats =()=>{}
 const getMyPosts =()=>{}
