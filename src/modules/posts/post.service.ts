@@ -10,7 +10,19 @@ const createPost =async(payload: ICreatePostPayload, userId: string)=>{
     })
     return result
 }
-const getAllPosts =()=>{}
+const getAllPosts =async()=>{
+    const posts = await prisma.post.findMany({
+        include: {
+            author: {
+                omit: {
+                    password: true
+                }
+            },
+            comments: true
+        }
+    })
+    return posts
+}
 const getPostStats =()=>{}
 const getMyPosts =()=>{}
 const getPostById =()=>{}
