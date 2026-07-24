@@ -28,9 +28,25 @@ const getAllPosts = catchAsync(async(req: Request, res: Response, next: NextFunc
         data: result
     })
 })
+
+const getPostById = catchAsync(async(req: Request, res: Response, next: NextFunction)=> {
+    const postId = req.params.postId
+
+    if(!postId){
+        throw new Error("Post id required in params")
+    }
+
+    const result = await postService.getPostById(postId as string)
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Post Retrieved  successfully",
+        data: result
+    })
+})
 const getPostStats = catchAsync(async(req: Request, res: Response, next: NextFunction)=> {})
 const getMyPosts = catchAsync(async(req: Request, res: Response, next: NextFunction)=> {})
-const getPostById = catchAsync(async(req: Request, res: Response, next: NextFunction)=> {})
 const updatePost = catchAsync(async(req: Request, res: Response, next: NextFunction)=> {})
 const deletePost = catchAsync(async(req: Request, res: Response, next: NextFunction)=> {})
 
