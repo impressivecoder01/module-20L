@@ -45,8 +45,19 @@ const getPostById = catchAsync(async(req: Request, res: Response, next: NextFunc
         data: result
     })
 })
+const getMyPosts = catchAsync(async(req: Request, res: Response, next: NextFunction)=> {
+    const authorId = req.user?.id
+
+    const result = await postService.getMyPosts(authorId as string)
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "My Posts Retrieved  successfully",
+        data: result
+    })
+
+})
 const getPostStats = catchAsync(async(req: Request, res: Response, next: NextFunction)=> {})
-const getMyPosts = catchAsync(async(req: Request, res: Response, next: NextFunction)=> {})
 const updatePost = catchAsync(async(req: Request, res: Response, next: NextFunction)=> {})
 const deletePost = catchAsync(async(req: Request, res: Response, next: NextFunction)=> {})
 

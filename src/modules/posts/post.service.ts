@@ -50,8 +50,34 @@ const getPostById =async(postId: string)=>{
     })
     return updatedPost
 }
+
+const getMyPosts =async(authorId  : string)=>{
+    const result = await prisma.post.findMany({
+        where: {
+            authorId
+        },
+
+        orderBy: {
+            createdAt: "desc"
+        },
+
+        include:{
+            comments: true,
+            author: {
+                omit: {
+                    password: true
+                }
+            },
+            _count: {
+                select: {
+                    comments: true
+                }
+            }
+        }
+    })
+    return result
+}
 const getPostStats =()=>{}
-const getMyPosts =()=>{}
 const updatePost =()=>{}
 const deletePost =()=>{}
 
