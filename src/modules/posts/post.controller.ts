@@ -83,7 +83,7 @@ const deletePost = catchAsync(async(req: Request, res: Response, next: NextFunct
     if(!postId){
         throw new Error("Post id required in params")
     }
-    // const payload = req.body
+    // const payload = req.body  
 
      await postService.deletePost(postId as string, authorId as string, isAdmin)
 
