@@ -30,19 +30,16 @@ const getPostById =async(postId: string)=>{
     //         id: postId
     //     }
     // })
+    // await prisma.post.update({
+    //     where: {
+    //         id: postId,
 
-    
-
-    await prisma.post.update({
-        where: {
-            id: postId,
-
-        },
-        data: {
-            views: {
-                increment: 1
-            }
-        },
+    //     },
+    //     data: {
+    //         views: {
+    //             increment: 1
+    //         }
+    //     },
         // include:{
         //     author: {
         //         omit:{
@@ -51,33 +48,77 @@ const getPostById =async(postId: string)=>{
         //     },
         //     comments: true
         // }
-    })
-    const post = await prisma.post.findFirstOrThrow({
-        where: {
-            id:  postId
-        },
-        include : {
-            author: {
-                omit: {
-                    password: true
-                }
-            },
-            comments: {
+    // })
+    // throw new Error("fake error")
+    // const post = await prisma.post.findFirstOrThrow({ 
+    //     where: {
+    //         id:  postId
+    //     },
+    //     include : {
+    //         author: {
+    //             omit: {
+    //                 password: true
+    //             }
+    //         },
+    //         comments: {
+    //             where: {
+    //                 status: CommentStatus.APPROVED
+    //             },
+    //             orderBy:{
+    //                 createdAt: "desc"
+    //             }
+    //         },
+    //         _count: {
+    //             select: {
+    //                 comments: true
+    //             }
+    //         }
+    //     }
+    // })
+    // return post
+
+    const transactionResult = await prisma.$transaction(
+        async(tx)=>{
+            await tx.post.update({
                 where: {
-                    status: CommentStatus.APPROVED
+                    id: postId
                 },
-                orderBy:{
-                    createdAt: "desc"
+                data: {
+                    views: {
+                        increment: 1
+                    }
                 }
-            },
-            _count: {
-                select: {
-                    comments: true
+            });
+
+            const post = await tx.post.findFirstOrThrow({
+                where: {
+                    id: postId
+                },
+                include: {
+                    author: {
+                        omit: {
+                            password: true
+                        }
+                    },
+                    comments: {
+                        where: {
+                            status: CommentStatus.APPROVED
+                        },
+                        orderBy: {
+                            createdAt: "desc"
+                        }
+                    },
+                    _count: {
+                        select: {
+                            comments: true
+                        }
+                    }
                 }
-            }
+            })
+            return post
         }
-    })
-    return post
+    )
+    return transactionResult
 }
 
 const getMyPosts =async(authorId  : string)=>{
