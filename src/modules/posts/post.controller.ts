@@ -75,7 +75,15 @@ const updatePost = catchAsync(async(req: Request, res: Response, next: NextFunct
         data: result
     })
 })
-const getPostStats = catchAsync(async(req: Request, res: Response, next: NextFunction)=> {})
+const getPostStats = catchAsync(async(req: Request, res: Response, next: NextFunction)=> {
+    const result = await postService.getPostStats()
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Post stats  retrieved successfully",
+        data: null
+    })
+})
 const deletePost = catchAsync(async(req: Request, res: Response, next: NextFunction)=> {
     const authorId = req.user?.id
     const isAdmin = req.user?.role === "ADMIN"
